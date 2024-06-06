@@ -40,7 +40,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 VERSION_CODE  必填
    * 插件版本代码  用于比较本地插件与静态属性PLUGIN_FILE_URL所指插件的版本号
    */
-  public static readonly VERSION_CODE: number = 0;
+  public static readonly VERSION_CODE: number = 1;
   /**
    * 静态属性 PLUGIN_FILE_URL  必填
    * 插件http、https链接, 如: http://example.com/plugin-template.js

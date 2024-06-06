@@ -30,7 +30,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 NAME  必填
    * 插件名称
    */
-  public static readonly NAME: string = '笔趣阁QU70';
+  public static readonly NAME: string = '笔趣阁';
   /**
    * 静态属性 VERSION  必填
    * 插件版本  用于显示

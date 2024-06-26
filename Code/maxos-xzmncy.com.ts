@@ -11,7 +11,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 ID  自动生成
    * 该值需符合正则表达式: [A-Za-z0-9_-]
    */
-  public static readonly ID: string = "HTtL-0RrPySCE0oMkqrDj";
+  public static readonly ID: string = "FeY7BVuCE_rFKdrE0cenj";
   /**
    * 静态属性 TYPE  必填
    * 插件类型
@@ -24,7 +24,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 GROUP  必填
    * 插件分组
    */
-  public static readonly GROUP: string = "👻MaxOS";
+  public static readonly GROUP: string = "MaxOS";
   /**
    * 静态属性 NAME  必填
    * 插件名称
@@ -39,18 +39,17 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 VERSION_CODE  必填
    * 插件版本代码  用于比较本地插件与静态属性PLUGIN_FILE_URL所指插件的版本号
    */
-  public static readonly VERSION_CODE: number = 2;
+  public static readonly VERSION_CODE: number = 0;
   /**
    * 静态属性 PLUGIN_FILE_URL  必填
    * 插件http、https链接, 如: http://example.com/plugin-template.js
    */
-  public static readonly PLUGIN_FILE_URL: string =
-    "https://raw.kkgithub.com/MaxOSSC/ReadCat-BookSource/main/Plugin/maxos-qu70.cc.ts.js";
+  public static readonly PLUGIN_FILE_URL: string = "";
   /**
    * 静态属性 BASE_URL  必填
    * 插件请求目标链接
    */
-  public static readonly BASE_URL: string = "https://www.qu70.cc";
+  public static readonly BASE_URL: string = "https://www.xzmncy.com";
   /**
    * 静态属性 REQUIRE  可选
    * 要求用户填写的值
@@ -125,19 +124,19 @@ plugin.exports = class Plugin implements BookSource {
   }
 
   async search(searchkey: string): Promise<SearchEntity[]> {
-    const { body } = await this.request.get(`${Plugin.BASE_URL}/user/search.html?q=${searchkey}`);
-    const list = JSON.parse(body);
+    const { body } = await this.request.get(`${Plugin.BASE_URL}/api/search?q=${searchkey}`);
+    const list = JSON.parse(body).data.search;
     if (isUndefined(list) || !isArray(list)) {
       return [];
     }
     const results: SearchEntity[] = [];
     for (const item of list) {
       results.push({
-        bookname: item.articlename,
+        bookname: item.book_name,
         author: item.author,
-        coverImageUrl: item.url_img,
-        detailPageUrl: Plugin.BASE_URL + item.url_list,
-        latestChapterTitle: item.intro,
+        coverImageUrl: Plugin.BASE_URL + item.cover,
+        detailPageUrl: Plugin.BASE_URL + item.book_list_url,
+        latestChapterTitle: item.latest_chapter_name,
       });
     }
     return results;
@@ -146,31 +145,26 @@ plugin.exports = class Plugin implements BookSource {
   async getDetail(detailPageUrl: string): Promise<DetailEntity> {
     const { body } = await this.request.get(detailPageUrl);
     const $ = this.cheerio(body);
-    const bookname = $("div.info > h1:nth-child(2)").text();
-    const author = $("div.small > span:nth-child(1)").text().substring(3);
-    const coverImageUrl = $("div.cover > img").attr("src");
-    const latestChapterTitle = $("span.last:nth-child(4) > a").text();
-    const intro = $("div.intro > dl > dd:nth-child(2)").text();
-    const chapterList = [];
-    $("div.listmain dl dd").each(function (index) {
-      // 遍历所有的 dd
-      if (index !== 10) {
-        // 跳过索引为 10 的 dd
-        $(this)
-          .find("a")
-          .each(function () {
-            chapterList.push({
-              title: $(this).text(),
-              url: Plugin.BASE_URL + $(this).attr("href"),
-            });
-          });
-      }
-    });
+    const bookname = $("#info > div.info > div.infobar > h1").text();
+    const author = $("#info > div.info > div.infobar > p:nth-child(2)").text().substring(5);
+    const latestChapterTitle = $("#info > div.info > div.infobar > p:nth-child(6) > a").text();
+    const coverImageUrl = $("#info > div.sidebar > div > img").attr("src");
+    const intro = $("#info > div.info > div.intro > p").text();
+    // console.log(detailPageUrl);
+    const items = $("#list > dl > dd");
+    const chapterList: Chapter[] = [];
+    for (const item of items) {
+      const a = $(item).children("a");
+      chapterList.push({
+        title: a.text(),
+        url: Plugin.BASE_URL + a.attr("href"),
+      });
+    }
     return {
       bookname,
       author,
-      coverImageUrl,
       latestChapterTitle,
+      coverImageUrl,
       intro,
       chapterList,
     };
@@ -179,11 +173,9 @@ plugin.exports = class Plugin implements BookSource {
   async getTextContent(chapter: Chapter): Promise<string[]> {
     const { body } = await this.request.get(chapter.url);
     const $ = this.cheerio(body);
-    $("#chaptercontent p").remove();
-    return $("#chaptercontent")
+    return $("#htmlContent")
       .html()
       .split("<br>")
-      .filter((t) => !t.includes("请收藏本站"));
-    // return $('#chaptercontent').html().replace(/请收藏本站：.*笔趣阁手机版：.*/, '').split('<br>').filter(t => t.trim());
+      .filter((t) => t.trim());
   }
 };

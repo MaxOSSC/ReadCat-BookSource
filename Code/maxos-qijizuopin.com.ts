@@ -1,3 +1,4 @@
+
 /**
  * 文件编码: UTF-8(如不是UTF8编码可能会导致乱码或未知错误)
  * 禁止使用import、require导入模块
@@ -11,7 +12,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 ID  自动生成
    * 该值需符合正则表达式: [A-Za-z0-9_-]
    */
-  public static readonly ID: string = "qJWg2IC7FdFHFL6KRPwZG";
+  public static readonly ID: string = 'qJWg2IC7FdFHFL6KRPwZG';
   /**
    * 静态属性 TYPE  必填
    * 插件类型
@@ -24,17 +25,17 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 GROUP  必填
    * 插件分组
    */
-  public static readonly GROUP: string = "👻MaxOS";
+  public static readonly GROUP: string = '👻MaxOS';
   /**
    * 静态属性 NAME  必填
    * 插件名称
    */
-  public static readonly NAME: string = "奇迹小说";
+  public static readonly NAME: string = '奇迹小说';
   /**
    * 静态属性 VERSION  必填
    * 插件版本  用于显示
    */
-  public static readonly VERSION: string = "1.0.0";
+  public static readonly VERSION: string = '1.0.0';
   /**
    * 静态属性 VERSION_CODE  必填
    * 插件版本代码  用于比较本地插件与静态属性PLUGIN_FILE_URL所指插件的版本号
@@ -44,13 +45,12 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 PLUGIN_FILE_URL  必填
    * 插件http、https链接, 如: http://example.com/plugin-template.js
    */
-  public static readonly PLUGIN_FILE_URL: string =
-    "https://raw.kkgithub.com/MaxOSSC/ReadCat-BookSource/main/Plugin/maxos-qijizuopin.com.ts.js";
+  public static readonly PLUGIN_FILE_URL: string = 'https://raw.kkgithub.com/MaxOSSC/ReadCat-BookSource/main/Plugin/maxos-qijizuopin.com.ts.js';
   /**
    * 静态属性 BASE_URL  必填
    * 插件请求目标链接
    */
-  public static readonly BASE_URL: string = "https://www.qijizuopin.com";
+  public static readonly BASE_URL: string = 'https://www.qijizuopin.com';
   /**
    * 静态属性 REQUIRE  可选
    * 要求用户填写的值
@@ -90,7 +90,7 @@ plugin.exports = class Plugin implements BookSource {
      *                     signal(可选): AbortSignal  中止信号
      *                   }
      *   return: Promise<{ body, code, headers }>
-     *
+     * 
      *   body: 响应体
      *   code: 响应码
      *   headers: 响应头
@@ -124,6 +124,7 @@ plugin.exports = class Plugin implements BookSource {
     this.nanoid = nanoid;
   }
 
+  
   async search(searchkey: string): Promise<SearchEntity[]> {
     const { body } = await this.request.get(`${Plugin.BASE_URL}/so/${searchkey}`);
     const $ = this.cheerio(body);
@@ -179,9 +180,8 @@ plugin.exports = class Plugin implements BookSource {
   async getTextContent(chapter: Chapter): Promise<string[]> {
     const { body } = await this.request.get(chapter.url);
     const $ = this.cheerio(body);
-    const texts = $(".content > p")
-      .map((index, element) => $(element).text().trim())
-      .get();
+    const texts = $(".content > p").map((index, element) => $(element).text().trim()).get();
     return texts;
   }
-};
+
+}

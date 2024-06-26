@@ -24,7 +24,7 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 GROUP  必填
    * 插件分组
    */
-  public static readonly GROUP: string = "MaxOS";
+  public static readonly GROUP: string = "👻MaxOS";
   /**
    * 静态属性 NAME  必填
    * 插件名称

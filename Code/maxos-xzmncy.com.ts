@@ -44,7 +44,8 @@ plugin.exports = class Plugin implements BookSource {
    * 静态属性 PLUGIN_FILE_URL  必填
    * 插件http、https链接, 如: http://example.com/plugin-template.js
    */
-  public static readonly PLUGIN_FILE_URL: string = "";
+  public static readonly PLUGIN_FILE_URL: string =
+    "https://raw.kkgithub.com/MaxOSSC/ReadCat-BookSource/main/Plugin/maxos-xzmncy.com.ts.js";
   /**
    * 静态属性 BASE_URL  必填
    * 插件请求目标链接
